@@ -9,95 +9,13 @@
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js'></script>
     <script type='text/javascript' src='ios_shopping.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript">
-
-    function send_dataa(address, data)
-    {
-      $.ajax({
-            url: "mail.php",
-            type: "POST",
-            data: data,
-            datatype: "form",
-            processData: false,
-            contentType: "application/x-www-form-urlencoded; charset=utf-8",
-            success: function (result) {
-                alert(result);
-            }
-        });
-    };
-
-      function send_data(address, data)
-      {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function(){} //wont be handling server response
-        xhr.open("POST", "mail.php");
-        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhr.send("address="+address+"data="+data);
-      }
-
-      var viewModel = function()
-      {
-        this.self = this;
-        //this.items = ko.observableArray([{id:'sbu'}, {id:'mayalo'}]);
-        this.id = ko.observable();
-        this.name = ko.observable();
-        this.code = ko.observable();
-        this.price = ko.observable();
-
-        this.subtotal = ko.observable(0);
-        this.vat = ko.observable(0.14);
-        this.total = ko.observable(0);
-
-        this.items = ko.observableArray();
-
-        //called when client wish to add new info on the table
-        self.add = function()
-        {
-          var order_item_dict = {id:this.id(), name:this.name(), code:this.code(), price:this.price()};
-          this.items.push(order_item_dict);
-        }
-
-        self.subtotal = ko.pureComputed(function()
-        {
-          var total = 0;
-          $.each(self.items(), function()
-          {
-            total += self.items().price;
-          })
-          return total;
-        });
-
-        self.total = ko.pureComputed(function()
-        {
-          this.subtotal * (1 + this.vat);
-          return this.subtotal();
-        });
-
-        //called when client clicks one of the delete buttons
-        self.delete = function(item){ self.items.remove(item); };
-
-      //called when the client wants to checkout
-      //NB: On the spec, this is described as sending client data as JSON to google and to chris's emial
-
-      self.checkout = function()
-      {
-        var jsonData = ko.toJSON(this.items()); //change the array object to a string of json format
-        //send to google
-        send_dataa('http://www.google.com', jsonData);
-        //send_data('mayalo.sbusiso@icloud.com', jsonData);
-      }
-    };
-
-    window.onload = function(){ ko.applyBindings(new viewModel()); }
-    </script>
-
   </head>
 
 <body>
   <!-- This creates the top sectiion of the page -->
   <header>
     <div class='topelements' align='middle'>
-      <h1><span class='ios_header'> Intelligent Output Systems</h1>
+      <img src="ios.jpeg" alt="IOSystems logo" style="width:300px;height:250px;">
     </div>
   </header>
   <hr>
@@ -139,7 +57,6 @@
           <td>
             <span data-bind="text: price"></span>
           </td>
-
           <td>
             <button data-bind="click: $parent.delete">delete</button>
           </td>
@@ -151,10 +68,10 @@
 
   <!--Creating summary section-->
   <div class='summary' style='border:1px solid black;'>
-      <h2> Summary</h2>
-      <p> Subtotal: <span data-binding="text: $parent.subtotal"></p>
-      <p> VAT: <span data-binding="text: vat"></p>
-      <p> Total:<span data-binding="text: total"></p>
+      <h2> Summary </h2>
+      <p> Subtotal: <span data-bind="text: subtotal"></span> </p>
+      <p> VAT: <span data-bind="text: vat"></span> </p>
+      <p> Total: <span data-bind="text: total"></span> </p>
       <button name="checkout_button" data-bind="click: checkout">checkout</button>
   </div>
 
