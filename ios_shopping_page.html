@@ -11,6 +11,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript">
 
+    function send_dataa(address, data)
+    {
+      $.ajax({
+            url: "mail.php",
+            type: "POST",
+            data: data,
+            datatype: "form",
+            processData: false,
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            success: function (result) {
+                alert(result);
+            }
+        });
+    };
+
       function send_data(address, data)
       {
         const xhr = new XMLHttpRequest();
@@ -18,7 +33,6 @@
         xhr.open("POST", "mail.php");
         xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xhr.send("address="+address+"data="+data);
-
       }
 
       var viewModel = function()
@@ -29,6 +43,11 @@
         this.name = ko.observable();
         this.code = ko.observable();
         this.price = ko.observable();
+
+        this.subtotal = ko.observable(0);
+        this.vat = ko.observable(0.14);
+        this.total = ko.observable(0);
+
         this.items = ko.observableArray();
 
         //called when client wish to add new info on the table
@@ -37,6 +56,22 @@
           var order_item_dict = {id:this.id(), name:this.name(), code:this.code(), price:this.price()};
           this.items.push(order_item_dict);
         }
+
+        self.subtotal = ko.pureComputed(function()
+        {
+          var total = 0;
+          $.each(self.items(), function()
+          {
+            total += self.items().price;
+          })
+          return total;
+        });
+
+        self.total = ko.pureComputed(function()
+        {
+          this.subtotal * (1 + this.vat);
+          return this.subtotal();
+        });
 
         //called when client clicks one of the delete buttons
         self.delete = function(item){ self.items.remove(item); };
@@ -48,8 +83,8 @@
       {
         var jsonData = ko.toJSON(this.items()); //change the array object to a string of json format
         //send to google
-        send_data('www.google.com', jsonData);
-        send_data('mayalo.sbusiso@icloud.com', jsonData);
+        send_dataa('http://www.google.com', jsonData);
+        //send_data('mayalo.sbusiso@icloud.com', jsonData);
       }
     };
 
@@ -67,16 +102,16 @@
   </header>
   <hr>
 
-  <h2> Please fill in the missing informarion below:</h2>
-  <form data-bind="submit: add">
-    <p>ID : <input type='text' data-bind="value: id"> </p>
-    <p>Name : <input data-bind="value: name"> </p>
-    <p>Code : <input data-bind="value: code"> </p>
-    <p>Price : <input data-bind="value: price"> </p>
-    <p> <button type="submit">ADD</button> </p>
+  <h2> Please fill in your order:</h2>
+  <form name="form" width="20%" data-bind="submit: add">
+    <p>ID : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' data-bind="value: id" required> </p>
+    <p>Name: &nbsp;<input type='text' data-bind="value: name" required> </p>
+    <p>Code :&nbsp; <input type='text' data-bind="value: code" required> </p>
+    <p>Price :&nbsp; <input type='number' min="1" step="any" data-bind="value: price" required> </p>
+    <p> <button name="add_button" type="submit">ADD</button> </p>
   </form>
 
-  <div class='mainCart' style='border:1px solid black;'>
+  <div class='mainCart' style="border:1px solid black;overflow-x:auto;">
     <!--Creating the table headings-->
   <table width='100%'>
     <thead>
@@ -117,10 +152,10 @@
   <!--Creating summary section-->
   <div class='summary' style='border:1px solid black;'>
       <h2> Summary</h2>
-      <p> Subtotal:</p>
-      <p> VAT:</p>
-      <p> Total:</p>
-      <button data-bind="click: checkout">checkout</button>
+      <p> Subtotal: <span data-binding="text: $parent.subtotal"></p>
+      <p> VAT: <span data-binding="text: vat"></p>
+      <p> Total:<span data-binding="text: total"></p>
+      <button name="checkout_button" data-bind="click: checkout">checkout</button>
   </div>
 
 </body>
