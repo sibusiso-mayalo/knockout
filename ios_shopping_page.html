@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> IOSystems - Shop Now </title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width'>
+
+    <link rel='stylesheet' href='ios_shopping_style.css'>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js'></script>
+    <script type='text/javascript' src='ios_shopping.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+      function send_data(address, data)
+      {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function(){} //wont be handling server response
+        xhr.open("POST", "mail.php");
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhr.send("address="+address+"data="+data);
+
+      }
+
+      var viewModel = function()
+      {
+        this.self = this;
+        //this.items = ko.observableArray([{id:'sbu'}, {id:'mayalo'}]);
+        this.id = ko.observable();
+        this.name = ko.observable();
+        this.code = ko.observable();
+        this.price = ko.observable();
+        this.items = ko.observableArray();
+
+        //called when client wish to add new info on the table
+        self.add = function()
+        {
+          var order_item_dict = {id:this.id(), name:this.name(), code:this.code(), price:this.price()};
+          this.items.push(order_item_dict);
+        }
+
+        //called when client clicks one of the delete buttons
+        self.delete = function(item){ self.items.remove(item); };
+
+      //called when the client wants to checkout
+      //NB: On the spec, this is described as sending client data as JSON to google and to chris's emial
+
+      self.checkout = function()
+      {
+        var jsonData = ko.toJSON(this.items()); //change the array object to a string of json format
+        //send to google
+        send_data('www.google.com', jsonData);
+        send_data('mayalo.sbusiso@icloud.com', jsonData);
+      }
+    };
+
+    window.onload = function(){ ko.applyBindings(new viewModel()); }
+    </script>
+
+  </head>
+
+<body>
+  <!-- This creates the top sectiion of the page -->
+  <header>
+    <div class='topelements' align='middle'>
+      <h1><span class='ios_header'> Intelligent Output Systems</h1>
+    </div>
+  </header>
+  <hr>
+
+  <h2> Please fill in the missing informarion below:</h2>
+  <form data-bind="submit: add">
+    <p>ID : <input type='text' data-bind="value: id"> </p>
+    <p>Name : <input data-bind="value: name"> </p>
+    <p>Code : <input data-bind="value: code"> </p>
+    <p>Price : <input data-bind="value: price"> </p>
+    <p> <button type="submit">ADD</button> </p>
+  </form>
+
+  <div class='mainCart' style='border:1px solid black;'>
+    <!--Creating the table headings-->
+  <table width='100%'>
+    <thead>
+      <tr>
+        <th width='20%'>ID</th>
+        <th width='20%'>Name</th>
+        <th width='20%'>Code</th>
+        <th width='20%'>Price</th>
+        <th width='20%'></th>
+      </tr>
+    </thead>
+
+    <!--Creating the table rows -->
+    <tbody data-bind='foreach: items'>
+      <tr>
+          <td>
+            <span data-bind="text: id"></span>
+          </td>
+          <td>
+            <span data-bind="text: name"></span>
+          </td>
+          <td>
+            <span data-bind="text: code"></span>
+          </td>
+          <td>
+            <span data-bind="text: price"></span>
+          </td>
+
+          <td>
+            <button data-bind="click: $parent.delete">delete</button>
+          </td>
+      </tr>
+    </tbody>
+
+  </table>
+  </div>
+
+  <!--Creating summary section-->
+  <div class='summary' style='border:1px solid black;'>
+      <h2> Summary</h2>
+      <p> Subtotal:</p>
+      <p> VAT:</p>
+      <p> Total:</p>
+      <button data-bind="click: checkout">checkout</button>
+  </div>
+
+</body>
+</html>

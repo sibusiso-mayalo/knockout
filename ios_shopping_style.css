@@ -1,0 +1,13 @@
+.mainCart
+{
+  float: left;
+  width: 65%;
+  overflow: hidden;
+}
+
+.summary
+{
+  float: right;
+  width: 33%;
+  overflow: hidden;
+}
