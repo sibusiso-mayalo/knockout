@@ -1,4 +1,4 @@
-*{margin: 0; padding: 0;}
+*{margin: 0; padding: 0; }
 body
 {
   font-family: Arial, Helvetica, sans-serif;
@@ -8,17 +8,22 @@ body
   margin-left: 5%;
   margin-right: 5%;
   margin-top: 0;
-  background-color: white;
+  background-color: #white;
 }
 
 header
 {
   background: white;
-  color: #ffffff;
+  color: black;
   min-height: 70px;
   padding-top: 10px;
   padding: 0;
   margin-top: 0;
+}
+
+.topelements
+{
+  background: #333;
 }
 
 header h1
@@ -27,11 +32,21 @@ header h1
   font-size: 40px;
   margin-bottom: 10px;
 }
+
 .mainCart
 {
-  float: left;
-  width: 65%;
-  overflow: hidden;
+  width: 70%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.send_data_button
+{
+  margin-left: 35%;
+  margin-right: 35%;
+
 }
 
 h2
@@ -39,6 +54,11 @@ h2
   font-size: 17px;
   margin-top: 5px;
   text-align: left;
+}
+
+form
+{
+
 }
 
 form p
@@ -52,7 +72,8 @@ form input[type="text"], input[type="number"]
   width: 15%;
   padding: 7px 5px;
   margin: 4px 0;
-  box-sizing: border-box;
+  box-sizing:
+  border-box;
 }
 
 form input[type="submit"]
@@ -74,37 +95,10 @@ th, td
   border-bottom: 1px solid #ddd;
 }
 
-table
-{
-  border-collapse: collapse;
-}
+table{ border-collapse: collapse; }
 
 tr:nth-child(even) {background-color: #f2f2f2;}
-table span
-{
-  font-size: 17px;
-
-}
-
-.summary h2
-{
-  font-size: 17px;
-  letter-spacing: 1px;
-  text-align: center;
-}
-.summary p
-{
-  font-size: 17px;
-  padding-right: 3px;
-  font-family:monospace;
-  font-weight: bold;
-}
-.summary
-{
-  float: right;
-  width: 33%;
-  overflow: hidden;
-}
+table span { font-size: 17px; }
 
 button
 {
@@ -121,4 +115,13 @@ button
   width: 40%px;
   max-width: 300px;
   align:center;
+}
+
+footer
+{
+  text-align: center;
+  font-weight: bold;
+  height: 40px;
+  width: 100%;
+  margin-top: 10px;
 }
