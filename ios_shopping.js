@@ -1,26 +1,17 @@
-
-function send_dataa(address, data)
-{
-  $.ajax({
-        url: "mail.php",
-        type: "POST",
-        data: data,
-        datatype: "form",
-        processData: false,
-        contentType: "application/x-www-form-urlencoded; charset=utf-8",
-        success: function (result) {
-            alert(result);
-        }
-    });
-};
-
-  function send_data(address, data)
+function send_data(address, data)
   {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function(){} //wont be handling server response
-    xhr.open("POST", "mail.php");
-    xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xhr.send("address="+address+"data="+data);
+    //Send email to the specified address
+    Email.send({
+      Host:"smtp.gmail.com",
+      Username:"",
+      Password:"",
+      To:address,
+      From:"mayalo.sbusiso@gmail.com",
+      Subject:"KnockoutJS Test",
+      Body:data
+    }).then(
+      message => alert(message)
+    );
   }
 
   var viewModel = function()
@@ -38,6 +29,12 @@ function send_dataa(address, data)
 
     this.items = ko.observableArray();
 
+    //called when client clicks one of the delete buttons
+    self.delete = function(item)
+    {
+      self.items.remove(item);
+    };
+
     //called when client wish to add new info on the table
     self.add = function()
     {
@@ -45,12 +42,21 @@ function send_dataa(address, data)
       this.items.push(order_item_dict);
     }
 
-    self.total = ko.pureComputed(function(){
-      return this.subtotal() * (1 + this.vat()) + 1;
-    });
+    self.subtotal = ko.pureComputed(function()
+    {
+      var total = 0;
 
-    //called when client clicks one of the delete buttons
-    self.delete = function(item){ self.items.remove(item); };
+      ko.utils.arrayForEach(this.items(), function(item)
+      {
+        total += item.price();
+        alert(total);
+      });
+      return total.toFixed(2);
+    }, this);
+
+    self.total = ko.pureComputed(function(){
+      return this.subtotal() * (1 + this.vat());
+    });
 
   //called when the client wants to checkout
   //NB: On the spec, this is described as sending client data as JSON to google and to chris's emial
@@ -58,8 +64,8 @@ function send_dataa(address, data)
   self.checkout = function()
   {
     var jsonData = ko.toJSON(this.items()); //change the array object to a string of json format
-    //send to google
-    send_dataa('http://www.google.com', jsonData);
+    //send_data('http://www.google.com', jsonData);
+    //send_data("chrisg@iosystemssa.com");
     //send_data('mayalo.sbusiso@icloud.com', jsonData);
   }
 };
