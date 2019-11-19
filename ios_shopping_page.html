@@ -8,7 +8,7 @@
     <link rel='stylesheet' href='ios_shopping_style.css'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js'></script>
     <script type='text/javascript' src='ios_shopping.js'></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
   </head>
 
 <body>
@@ -25,7 +25,7 @@
     <p>ID : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type='text' data-bind="value: id" required> </p>
     <p>Name: &nbsp;<input type='text' data-bind="value: name" required> </p>
     <p>Code :&nbsp; <input type='text' data-bind="value: code" required> </p>
-    <p>Price :&nbsp; <input type='number' min="1" step="any" data-bind="value: price" required> </p>
+    <p>Price :&nbsp; <input type='number' min="1" step="any" data-bind="value: price" required> </p><br>
     <p> <button name="add_button" type="submit">ADD</button> </p>
   </form>
 
@@ -58,22 +58,21 @@
             <span data-bind="text: price"></span>
           </td>
           <td>
-            <button data-bind="click: $parent.delete">delete</button>
+            <button type="submit" name="delete" data-bind="click: $parent.delete">delete</button>
           </td>
       </tr>
     </tbody>
-
   </table>
   </div>
 
-  <!--Creating summary section-->
-  <div class='summary' style='border:1px solid black;'>
-      <h2> Summary </h2>
-      <p> Subtotal: <span data-bind="text: subtotal"></span> </p>
-      <p> VAT: <span data-bind="text: vat"></span> </p>
-      <p> Total: <span data-bind="text: total"></span> </p>
-      <button name="checkout_button" data-bind="click: checkout">checkout</button>
+  <div class="send_data_button">
+    <button name="checkout_button" data-bind="click: checkout">checkout</button>
   </div>
 
 </body>
+
+<footer>
+    <p> &copy; Intelligent Output Systems 2019. All rights reserved. </p>
+</footer>
+
 </html>
